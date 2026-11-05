@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#05070a" />
+  <meta name="description" content="BLACKSITE: ZERO HOUR — a browser-based tactical first-person shooter built with Three.js." />
+  <title>BLACKSITE // ZERO HOUR</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0d0c'/%3E%3Cpath d='M6 24 L16 6 L26 24 Z' fill='none' stroke='%23d8ff3e' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='19' r='2.5' fill='%23d8ff3e'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three.module.js",
+        "three/addons/": "./vendor/addons/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <canvas id="game-canvas" aria-label="Game viewport"></canvas>
+
+    <!-- ============================ LOADING ============================ -->
+    <div id="loading" class="screen loading-screen">
+      <div class="load-inner">
+        <div class="load-mark">◈</div>
+        <div class="load-title">BLACKSITE</div>
+        <div class="load-sub">INITIALIZING TACTICAL RENDERER</div>
+        <div class="load-track"><div id="load-bar" class="load-bar"></div></div>
+        <div id="load-status" class="load-status">BOOTING…</div>
+      </div>
+    </div>
+
+    <!-- ============================ MAIN MENU ============================ -->
+    <div id="menu" class="screen menu-screen hidden">
+      <div class="menu-grid" aria-hidden="true"></div>
+      <div class="menu-glow" aria-hidden="true"></div>
+      <div class="menu-scan" aria-hidden="true"></div>
+
+      <header class="menu-top">
+        <div class="brand">
+          <span class="brand-glyph">◈</span>
+          <span>OMNICORP <b>TACTICAL DIVISION</b></span>
+        </div>
+        <div class="menu-meta">
+          <span class="meta-dot"></span> SECURE CHANNEL 07
+          <span class="meta-sep">/</span>
+          <span id="menu-clock">00:00:00</span>
+        </div>
+      </header>
+
+      <main class="menu-main">
+        <div class="title-block">
+          <div class="eyebrow"><span></span> CLASSIFIED // OPERATION BLACKSITE <span></span></div>
+          <h1 class="title">BLACK<span>SITE</span></h1>
+          <div class="title-rule"><i></i><em>ZERO HOUR</em><i></i></div>
+          <p class="tagline">The compound has gone dark. Five waves. One extraction window.<br />Hold the line, operative.</p>
+
+          <div class="menu-actions">
+            <button id="start-btn" class="btn btn-primary" aria-label="Start Game">
+              <span class="btn-kicker">DEPLOY</span>
+              <span class="btn-label">START GAME</span>
+              <span class="btn-arrow">→</span>
+            </button>
+            <div class="best-score">
+              <span class="best-label">PERSONAL BEST</span>
+              <span id="best-score" class="best-value">0</span>
+            </div>
+          </div>
+
+          <div class="menu-note">
+            <span class="note-icon">⚠</span>
+            <span>Mouse + keyboard recommended. Touch controls enabled on mobile.</span>
+          </div>
+        </div>
+
+        <aside class="briefing">
+          <div class="briefing-head"><span>MISSION BRIEF</span><i></i></div>
+          <div class="briefing-row"><span class="bk">OBJECTIVE</span><span class="bv">SURVIVE 5 ASSAULT WAVES</span></div>
+          <div class="briefing-row"><span class="bk">LOCATION</span><span class="bv">BLACKSITE 07 // KARST VALLEY</span></div>
+          <div class="briefing-row"><span class="bk">HOSTILES</span><span class="bv">SENTINEL AUTONOMOUS UNITS</span></div>
+          <div class="briefing-row"><span class="bk">EXTRACTION</span><span class="bv">DAWN — 00:00 REMAINING</span></div>
+          <div class="briefing-divider"></div>
+          <div class="controls">
+            <div class="control"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>MOVE</span></div>
+            <div class="control"><kbd class="wide">MOUSE</kbd><span>AIM / FIRE</span></div>
+            <div class="control"><kbd>SHIFT</kbd><span>SPRINT</span></div>
+            <div class="control"><kbd>SPACE</kbd><span>JUMP</span></div>
+            <div class="control"><kbd>R</kbd><span>RELOAD</span></div>
+            <div class="control"><kbd>1</kbd><kbd>2</kbd><span>WEAPONS</span></div>
+            <div class="control"><kbd>ESC</kbd><span>PAUSE</span></div>
+            <div class="control"><kbd>CTRL</kbd><span>CROUCH</span></div>
+          </div>
+          <div class="settings-inline">
+            <label class="setting">
+              <span>SENSITIVITY <b data-out="sensitivity">1.0</b></span>
+              <input type="range" data-setting="sensitivity" min="0.2" max="2.5" step="0.1" value="1" />
+            </label>
+            <label class="setting">
+              <span>VOLUME <b data-out="volume">70</b></span>
+              <input type="range" data-setting="volume" min="0" max="1" step="0.05" value="0.7" />
+            </label>
+            <label class="setting setting-row">
+              <span>QUALITY</span>
+              <select data-setting="quality">
+                <option value="low">LOW</option>
+                <option value="medium">MEDIUM</option>
+                <option value="high" selected>HIGH</option>
+              </select>
+            </label>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="menu-foot">
+        <span>BUILD 1.0.0 // WEBGL2</span>
+        <span class="foot-center">A THREE.JS COMBAT SIMULATION</span>
+        <span>© 2026 OMNICORP</span>
+      </footer>
+    </div>
+
+    <!-- ============================ HUD ============================ -->
+    <div id="hud" class="hud hidden" aria-live="polite">
+      <div id="damage-vignette" class="damage-vignette"></div>
+      <div id="low-health" class="low-health"></div>
+      <div id="hit-flash" class="hit-flash"></div>
+
+      <!-- top bar -->
+      <div class="hud-top">
+        <div class="objective-panel">
+          <div class="panel-tag">MISSION // BLACKSITE 07</div>
+          <div class="objective-main"><span id="wave-label">WAVE 1 / 5</span><span id="enemy-count" class="enemy-count">4 HOSTILES</span></div>
+          <div class="wave-pips" id="wave-pips"></div>
+        </div>
+
+        <div class="compass-wrap">
+          <canvas id="compass" width="520" height="42"></canvas>
+          <div class="compass-marker"></div>
+          <div id="compass-heading" class="compass-heading">000</div>
+        </div>
+
+        <div class="score-panel">
+          <div class="panel-tag">COMBAT SCORE</div>
+          <div id="score" class="score-value">000000</div>
+          <div class="score-sub"><span id="kills">0 KILLS</span><span id="accuracy">0% ACC</span></div>
+        </div>
+      </div>
+
+      <!-- minimap -->
+      <div class="minimap-panel">
+        <canvas id="minimap" width="168" height="168"></canvas>
+        <div class="minimap-label"><span>N</span> TACMAP</div>
+        <div class="minimap-ring"></div>
+      </div>
+
+      <!-- crosshair -->
+      <div id="crosshair" class="crosshair">
+        <i class="ch-dot"></i>
+        <i class="ch-line ch-t"></i>
+        <i class="ch-line ch-b"></i>
+        <i class="ch-line ch-l"></i>
+        <i class="ch-line ch-r"></i>
+      </div>
+      <div id="hitmarker" class="hitmarker"><i></i><i></i><i></i><i></i></div>
+      <div id="interact-prompt" class="interact-prompt"></div>
+
+      <!-- damage direction arcs -->
+      <div id="damage-dirs" class="damage-dirs"></div>
+
+      <!-- kill feed -->
+      <div id="killfeed" class="killfeed"></div>
+
+      <!-- wave banner -->
+      <div id="wave-banner" class="wave-banner">
+        <div class="wb-kicker">INCOMING</div>
+        <div class="wb-title">WAVE 1</div>
+        <div class="wb-sub">HOSTILES INBOUND</div>
+      </div>
+
+      <div id="toast" class="toast"></div>
+
+      <!-- bottom left: vitals -->
+      <div class="vitals">
+        <div class="vitals-head"><span class="vi-label">OPERATIVE</span><span id="health-value">100</span></div>
+        <div class="health-track"><div id="health-bar" class="health-bar"></div><div class="health-segments"></div></div>
+        <div class="vitals-sub"><span id="health-state">NOMINAL</span><span id="stamina-label">STAMINA</span></div>
+        <div class="stamina-track"><div id="stamina-bar" class="stamina-bar"></div></div>
+      </div>
+
+      <!-- bottom right: weapon -->
+      <div class="weapon-panel">
+        <div class="weapon-top">
+          <span id="weapon-mode" class="weapon-mode">AUTO</span>
+          <span id="weapon-name">MK-17 VANGUARD</span>
+        </div>
+        <div class="ammo-row">
+          <span id="ammo-mag" class="ammo-mag">30</span>
+          <span class="ammo-sep">/</span>
+          <span id="ammo-reserve" class="ammo-reserve">180</span>
+        </div>
+        <div class="reload-track"><div id="reload-bar" class="reload-bar"></div></div>
+        <div class="weapon-bottom"><span id="fire-mode">FULL AUTO</span><span id="weapon-slot">1 / 2</span></div>
+      </div>
+
+      <div id="hint" class="hint">CLICK TO CAPTURE MOUSE</div>
+      <div class="hud-corner tl"></div><div class="hud-corner tr"></div>
+      <div class="hud-corner bl"></div><div class="hud-corner br"></div>
+    </div>
+
+    <!-- ============================ MOBILE ============================ -->
+    <div id="mobile-controls" class="mobile-controls hidden">
+      <div id="look-zone" class="look-zone"></div>
+      <div id="move-stick" class="move-stick">
+        <div class="stick-ring"></div>
+        <div id="move-knob" class="stick-knob"></div>
+      </div>
+      <div class="mobile-actions">
+        <button id="btn-fire" class="mbtn mbtn-fire" aria-label="Fire"><span>FIRE</span></button>
+        <button id="btn-reload" class="mbtn mbtn-small" aria-label="Reload">R</button>
+        <button id="btn-jump" class="mbtn mbtn-small" aria-label="Jump">⤒</button>
+        <button id="btn-sprint" class="mbtn mbtn-small" aria-label="Sprint">»</button>
+        <button id="btn-swap" class="mbtn mbtn-small" aria-label="Swap weapon">⇄</button>
+        <button id="btn-pause" class="mbtn mbtn-small mbtn-pause" aria-label="Pause">II</button>
+      </div>
+    </div>
+
+    <!-- ============================ PAUSE ============================ -->
+    <div id="pause" class="screen pause-screen hidden">
+      <div class="pause-panel">
+        <div class="pause-head">
+          <span class="panel-tag">TACTICAL PAUSE</span>
+          <h2>STAND BY</h2>
+          <p>Operation suspended. Renderer continues at low power.</p>
+        </div>
+        <div class="pause-stats">
+          <div><span>WAVE</span><b id="pause-wave">1 / 5</b></div>
+          <div><span>SCORE</span><b id="pause-score">0</b></div>
+          <div><span>KILLS</span><b id="pause-kills">0</b></div>
+          <div><span>ACCURACY</span><b id="pause-acc">0%</b></div>
+        </div>
+        <div class="pause-settings">
+          <label class="setting">
+            <span>SENSITIVITY <b data-out="sensitivity">1.0</b></span>
+            <input type="range" data-setting="sensitivity" min="0.2" max="2.5" step="0.1" value="1" />
+          </label>
+          <label class="setting">
+            <span>VOLUME <b data-out="volume">70</b></span>
+            <input type="range" data-setting="volume" min="0" max="1" step="0.05" value="0.7" />
+          </label>
+          <label class="setting setting-row">
+            <span>QUALITY</span>
+            <select data-setting="quality">
+              <option value="low">LOW</option>
+              <option value="medium">MEDIUM</option>
+              <option value="high" selected>HIGH</option>
+            </select>
+          </label>
+          <label class="setting setting-row">
+            <span>INVERT LOOK</span>
+            <input type="checkbox" data-setting="invert" />
+          </label>
+        </div>
+        <div class="pause-actions">
+          <button id="resume-btn" class="btn btn-primary btn-sm"><span class="btn-label">RESUME</span><span class="btn-arrow">→</span></button>
+          <button id="restart-btn" class="btn btn-ghost btn-sm">RESTART</button>
+          <button id="quit-btn" class="btn btn-ghost btn-sm">ABORT MISSION</button>
+        </div>
+        <div class="pause-foot"><span id="pause-fps">60 FPS</span><span>ESC TO RESUME</span></div>
+      </div>
+    </div>
+
+    <!-- ============================ RESULT ============================ -->
+    <div id="result" class="screen result-screen hidden">
+      <div class="result-panel">
+        <div id="result-kicker" class="result-kicker">MISSION COMPLETE</div>
+        <h2 id="result-title">EXTRACTION SECURED</h2>
+        <p id="result-sub">All assault waves neutralized. The valley is quiet.</p>
+        <div class="result-stats">
+          <div><span>SCORE</span><b id="res-score">0</b></div>
+          <div><span>KILLS</span><b id="res-kills">0</b></div>
+          <div><span>HEADSHOTS</span><b id="res-heads">0</b></div>
+          <div><span>ACCURACY</span><b id="res-acc">0%</b></div>
+          <div><span>TIME</span><b id="res-time">0:00</b></div>
+          <div><span>BEST</span><b id="res-best">0</b></div>
+        </div>
+        <div class="result-actions">
+          <button id="again-btn" class="btn btn-primary"><span class="btn-kicker">REDEPLOY</span><span class="btn-label">PLAY AGAIN</span><span class="btn-arrow">→</span></button>
+          <button id="menu-btn" class="btn btn-ghost">MAIN MENU</button>
+        </div>
+        <div class="result-foot">“THE ONLY EASY DAY WAS YESTERDAY.”</div>
+      </div>
+    </div>
+
+    <div id="rotate-notice" class="rotate-notice hidden">Rotate your device for the full tactical view</div>
+  </div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
