@@ -37,8 +37,41 @@ export const LOOT_BASE=[
  {name:'Ashbound Cleaver',slot:'Main hand',icon:'⚔',type:'weapon',power:8,unique:'Every third strike sends a cinder arc through nearby enemies.',class:'warrior'},
  {name:'Warden’s Iron',slot:'Chest',icon:'⛨',type:'armor',power:13,unique:'At low health, a pale spirit shields you once per encounter.',class:'any'},
  {name:'Ashglass Pendant',slot:'Amulet',icon:'◈',power:6,type:'jewelry',unique:'Your class resource regenerates 8% faster.',class:'any'},
- {name:'Cinderstep Boots',slot:'Boots',icon:'⌁',power:7,type:'armor',unique:'Dodging leaves a burning trail.',class:'any'},
+ {name:'Cinderstep Boots',slot:'Boots',icon:'⌁',type:'armor',power:7,unique:'Dodging leaves a burning trail.',class:'any'},
  {name:'Oathbreaker’s Edge',slot:'Main hand',icon:'⚔',power:18,type:'weapon',unique:'Critical hits erupt after a three-strike combo.',class:'warrior'},
  {name:'Ring of the First Flame',slot:'Ring I',icon:'◉',power:9,type:'jewelry',unique:'Fire damage chains to one additional enemy.',class:'any'},
- {name:'The Empty Choir',slot:'Off-hand',icon:'♧',power:11,type:'focus',unique:'Your next skill echoes at 40% power after an elite kill.',class:'any'}
+ {name:'The Empty Choir',slot:'Off-hand',icon:'♧',power:11,type:'focus',unique:'Your next skill echoes at 40% power after an elite kill.',class:'any'},
+ {name:'Gravebound Hood',slot:'Helmet',icon:'☾',type:'armor',power:9,unique:'Killing a marked enemy restores 6 essence.',class:'necromancer'},
+ {name:'Sablewood Mantle',slot:'Chest',icon:'✦',type:'armor',power:12,unique:'Elemental echoes have a chance to strike twice.',class:'mage'},
+ {name:'Stalker’s Leathers',slot:'Chest',icon:'➶',type:'armor',power:10,unique:'Moving for 2 seconds grants 12% critical chance.',class:'ranger'},
+ {name:'Duskwrit Bracers',slot:'Gloves',icon:'✧',type:'armor',power:8,unique:'Critical strikes leave a stacking venom.',class:'assassin'},
+ {name:'Dawnsworn Gauntlets',slot:'Gloves',icon:'☼',type:'armor',power:8,unique:'Healing also grants a brief shield.',class:'paladin'},
+ {name:'Cinderweave Leggings',slot:'Pants',icon:'⌁',type:'armor',power:9,unique:'Standing in ash increases armor by 8%.',class:'any'},
+ {name:'Pilgrim’s Treads',slot:'Boots',icon:'➤',type:'armor',power:7,unique:'Dodge cooldown is reduced by 15%.',class:'any'},
+ {name:'Shard of the Seventh Seal',slot:'Off-hand',icon:'◇',type:'focus',power:15,unique:'Your sixth skill costs 25% less resource.',class:'any'},
+ {name:'Maera’s Keepsake',slot:'Amulet',icon:'❧',type:'jewelry',power:10,unique:'Waypoint shrines restore 20% more health.',class:'any'},
+ {name:'Hollow Circlet',slot:'Helmet',icon:'◈',type:'armor',power:8,unique:'Nearby enemies suffer 6% more damage.',class:'any'},
+ {name:'Warden’s Signet',slot:'Ring I',icon:'◉',type:'jewelry',power:11,unique:'Bosses take 8% increased damage from you.',class:'any'},
+ {name:'Emberfall Loop',slot:'Ring II',icon:'◉',type:'jewelry',power:9,unique:'Your potion also burns nearby enemies.',class:'any'},
+ {name:'The Ashen Oath',slot:'Main hand',icon:'⚔',type:'weapon',power:21,unique:'Every sixth hit calls a pillar of pale fire.',class:'any'},
+ {name:'Nightroot Bow',slot:'Main hand',icon:'➶',type:'weapon',power:19,unique:'Projectiles split toward a second target.',class:'ranger'},
+ {name:'Reliquary of Names',slot:'Off-hand',icon:'†',type:'focus',power:17,unique:'Fallen enemies have a chance to rise as spectral allies.',class:'necromancer'},
+ {name:'Sunforged Aegis',slot:'Off-hand',icon:'⛨',type:'focus',power:16,unique:'Blocking grants 10 resolve.',class:'paladin'},
+ {name:'Whisperfang',slot:'Main hand',icon:'☾',type:'weapon',power:17,unique:'Striking from behind guarantees a critical hit.',class:'assassin'}
 ];
+export const AFFIXES=[
+ {label:'of Embers',stat:'damage',value:2},
+ {label:'of the Vigil',stat:'health',value:8},
+ {label:'of Haste',stat:'speed',value:3},
+ {label:'of Precision',stat:'crit',value:1},
+ {label:'of Warding',stat:'armor',value:2},
+ {label:'of the Well',stat:'resource',value:4}
+];
+export const STARTER_GEAR={
+ warrior:[{name:'Recruit’s Oathblade',slot:'Main hand',icon:'⚔',type:'weapon',power:5,rarity:'Common',unique:'A chipped blade that still remembers its vow.'},{name:'Ashen Vanguard Plate',slot:'Chest',icon:'⛨',type:'armor',power:5,rarity:'Common',unique:'Scarred iron from the last muster.'}],
+ mage:[{name:'Sablewood Focus',slot:'Main hand',icon:'ϟ',type:'weapon',power:5,rarity:'Common',unique:'The wood hums when the veil is thin.'},{name:'Ember Sigil',slot:'Amulet',icon:'◈',type:'jewelry',power:4,rarity:'Common',unique:'A coal that never cools.'}],
+ ranger:[{name:'Marchland Longbow',slot:'Main hand',icon:'➶',type:'weapon',power:5,rarity:'Common',unique:'Strung with sinew and patience.'},{name:'Trailhide Jerkin',slot:'Chest',icon:'⛨',type:'armor',power:4,rarity:'Common',unique:'Smells of pine smoke and rain.'}],
+ necromancer:[{name:'Reliquary Staff',slot:'Main hand',icon:'†',type:'weapon',power:5,rarity:'Common',unique:'A bone cage around a captive whisper.'},{name:'Gravebound Hood',slot:'Helmet',icon:'☾',type:'armor',power:4,rarity:'Common',unique:'The dead speak louder beneath it.'}],
+ paladin:[{name:'Sun-forged Mace',slot:'Main hand',icon:'✦',type:'weapon',power:5,rarity:'Common',unique:'Its light is pale, but it does not waver.'},{name:'Oathkeeper’s Plate',slot:'Chest',icon:'⛨',type:'armor',power:5,rarity:'Common',unique:'Dented where a god once struck it.'}],
+ assassin:[{name:'Twin Duskblades',slot:'Main hand',icon:'⚔',type:'weapon',power:5,rarity:'Common',unique:'Two answers to the same question.'},{name:'Nightweave Leathers',slot:'Chest',icon:'⛨',type:'armor',power:4,rarity:'Common',unique:'Quiet as a held breath.'}]
+};
