@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0908" />
+<title>Eldoria — Age of Ruin</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div id="app">
+  <canvas id="game" aria-label="Game world"></canvas>
+  <div id="vignette"></div>
+
+  <!-- ============ HUD ============ -->
+  <div id="hud" class="hidden">
+    <div class="hud-top-left">
+      <div class="portrait-frame" id="hud-portrait">
+        <canvas id="portrait-canvas" width="96" height="96"></canvas>
+        <span class="lvl-badge" id="hud-level">1</span>
+      </div>
+      <div class="char-meta">
+        <div class="char-name" id="hud-name">Wanderer</div>
+        <div class="char-class" id="hud-class">Warrior</div>
+        <div class="bar xp-bar"><div class="fill" id="xp-fill"></div><span id="xp-text">0 / 100</span></div>
+      </div>
+    </div>
+
+    <div class="region-banner" id="region-banner">
+      <div class="region-name" id="region-name">The Kingdom of Ash</div>
+      <div class="region-sub" id="region-sub">Act I · Ashes of Dawn</div>
+    </div>
+
+    <div class="hud-top-right">
+      <div class="minimap-frame">
+        <canvas id="minimap" width="188" height="188"></canvas>
+        <div class="minimap-ring"></div>
+        <div class="minimap-label" id="minimap-label">EMBERFALL</div>
+      </div>
+      <div class="currency-row">
+        <span class="coin">◈</span><span id="hud-gold">0</span>
+        <span class="essence">✦</span><span id="hud-essence">0</span>
+      </div>
+    </div>
+
+    <div class="quest-tracker" id="quest-tracker">
+      <div class="qt-head">Quest</div>
+      <div class="qt-title" id="qt-title">—</div>
+      <ul class="qt-objectives" id="qt-objectives"></ul>
+    </div>
+
+    <div class="globe-wrap left">
+      <div class="globe" id="health-globe">
+        <div class="globe-liquid health" id="health-liquid"></div>
+        <div class="globe-shine"></div>
+        <div class="globe-value"><span id="health-text">100</span></div>
+      </div>
+      <div class="globe-caption">VITALITY</div>
+    </div>
+
+    <div class="globe-wrap right">
+      <div class="globe" id="resource-globe">
+        <div class="globe-liquid resource" id="resource-liquid"></div>
+        <div class="globe-shine"></div>
+        <div class="globe-value"><span id="resource-text">100</span></div>
+      </div>
+      <div class="globe-caption" id="resource-caption">RAGE</div>
+    </div>
+
+    <div class="action-bar">
+      <div class="potion-slot" id="potion-slot" title="Healing Flask (R)">
+        <span class="potion-icon">⚗</span>
+        <span class="potion-count" id="potion-count">3</span>
+      </div>
+      <div class="abilities" id="abilities"></div>
+      <div class="bar-actions">
+        <button class="mini-btn" data-panel="inventory" title="Inventory (I)">▣</button>
+        <button class="mini-btn" data-panel="skills" title="Skills (K)">✧</button>
+        <button class="mini-btn" data-panel="map" title="World Map (M)">◈</button>
+        <button class="mini-btn" data-panel="journal" title="Journal (J)">❧</button>
+        <button class="mini-btn" data-panel="character" title="Character (C)">☗</button>
+      </div>
+    </div>
+
+    <div class="hint-bar" id="hint-bar">WASD move · Left click attack · 1–6 abilities · Space dodge · E interact · Tab loot nearby</div>
+
+    <div class="toast-layer" id="toast-layer"></div>
+    <div class="loot-log" id="loot-log"></div>
+    <div class="boss-bar hidden" id="boss-bar">
+      <div class="boss-name" id="boss-name">The Cinder Warden</div>
+      <div class="boss-sub" id="boss-sub">Warden of the Ashen Keep</div>
+      <div class="bar boss-hp"><div class="fill" id="boss-fill"></div></div>
+      <div class="boss-phases" id="boss-phases"><i></i><i></i><i></i></div>
+    </div>
+    <div class="interact-prompt hidden" id="interact-prompt"><b>E</b> <span id="interact-text">Speak</span></div>
+    <div class="combat-tip hidden" id="combat-tip"></div>
+  </div>
+
+  <!-- ============ MOBILE ============ -->
+  <div id="mobile-controls" class="hidden">
+    <div class="joystick" id="joystick"><div class="stick" id="stick"></div></div>
+    <div class="mobile-abilities" id="mobile-abilities"></div>
+  </div>
+
+  <!-- ============ MAIN MENU ============ -->
+  <section class="screen active" id="screen-main">
+    <div class="menu-fog"></div>
+    <div class="title-block">
+      <div class="title-rune">✦</div>
+      <h1 class="game-title">ELDORIA</h1>
+      <div class="title-rule"><span></span><em>AGE OF RUIN</em><span></span></div>
+      <p class="title-tag">The seals are broken. The Blight remembers.</p>
+      <div class="menu-buttons">
+        <button class="btn primary" id="btn-continue">Continue</button>
+        <button class="btn primary" id="btn-new">New Game</button>
+        <button class="btn" id="btn-settings">Settings</button>
+        <button class="btn" id="btn-credits">Credits</button>
+      </div>
+      <div class="save-meta" id="save-meta">No chronicle recorded</div>
+    </div>
+    <div class="menu-footer">
+      <span>An original dark fantasy action RPG</span>
+      <span class="sep">◆</span>
+      <span>Six classes · Six regions · Endless Nightmare</span>
+    </div>
+  </section>
+
+  <!-- ============ CHARACTER SELECT ============ -->
+  <section class="screen" id="screen-select">
+    <div class="panel-head">
+      <div class="eyebrow">The Sundering left no heroes</div>
+      <h2>Choose Your Survivor</h2>
+      <p class="sub">Each soul carries a different fragment of the old world.</p>
+    </div>
+    <div class="class-grid" id="class-grid"></div>
+    <div class="select-footer">
+      <div class="name-field">
+        <label for="char-name-input">NAME</label>
+        <input id="char-name-input" maxlength="16" placeholder="Wanderer" autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="select-actions">
+        <button class="btn ghost" id="btn-select-back">Back</button>
+        <button class="btn primary" id="btn-enter-world" disabled>Enter Eldoria</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CINEMATIC ============ -->
+  <section class="screen cinematic" id="screen-intro">
+    <div class="cine-bars top"></div>
+    <div class="cine-bars bottom"></div>
+    <div class="cine-art" id="cine-art">
+      <div class="cine-sky"></div>
+      <div class="cine-moon"></div>
+      <div class="cine-spire s1"></div>
+      <div class="cine-spire s2"></div>
+      <div class="cine-spire s3"></div>
+      <div class="cine-fire"></div>
+      <div class="cine-ash" id="cine-ash"></div>
+    </div>
+    <div class="cine-text" id="cine-text">
+      <div class="cine-chapter">PROLOGUE</div>
+      <h3 id="cine-title">The Night the Sky Broke</h3>
+      <p id="cine-body"></p>
+    </div>
+    <div class="cine-actions">
+      <button class="btn ghost small" id="btn-skip-intro">Skip</button>
+      <button class="btn primary small hidden" id="btn-intro-next">Continue</button>
+    </div>
+  </section>
+
+  <!-- ============ PAUSE ============ -->
+  <section class="screen overlay-screen" id="screen-pause">
+    <div class="modal small-modal">
+      <div class="modal-ornament">✦</div>
+      <h2>Chronicle Paused</h2>
+      <div class="pause-buttons">
+        <button class="btn primary" id="btn-resume">Resume</button>
+        <button class="btn" id="btn-pause-settings">Settings</button>
+        <button class="btn" id="btn-save-quit">Save &amp; Quit to Menu</button>
+      </div>
+      <div class="pause-meta" id="pause-meta"></div>
+    </div>
+  </section>
+
+  <!-- ============ DEATH ============ -->
+  <section class="screen overlay-screen" id="screen-death">
+    <div class="death-wrap">
+      <div class="death-title">YOU HAVE FALLEN</div>
+      <p class="death-sub">The Blight claims another, but the fragment endures.</p>
+      <div class="death-actions">
+        <button class="btn primary" id="btn-respawn">Rise at the Last Waypoint</button>
+        <button class="btn ghost" id="btn-death-quit">Abandon Chronicle</button>
+      </div>
+      <div class="death-meta" id="death-meta"></div>
+    </div>
+  </section>
+
+  <!-- ============ GENERIC PANELS ============ -->
+  <div id="panel-layer" class="hidden">
+    <div class="panel-backdrop" id="panel-backdrop"></div>
+    <div class="game-panel" id="game-panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-eyebrow" id="panel-eyebrow">CHRONICLE</div>
+          <h2 id="panel-title">Inventory</h2>
+        </div>
+        <button class="close-btn" id="panel-close" aria-label="Close">✕</button>
+      </div>
+      <div class="panel-body" id="panel-body"></div>
+    </div>
+  </div>
+
+  <!-- ============ DIALOGUE ============ -->
+  <div id="dialogue-layer" class="hidden">
+    <div class="dialogue-box">
+      <div class="speaker-portrait"><canvas id="speaker-canvas" width="120" height="120"></canvas><div class="speaker-glow"></div></div>
+      <div class="dialogue-content">
+        <div class="speaker-name" id="speaker-name">Warden Maera</div>
+        <div class="speaker-role" id="speaker-role">Survivor of Emberfall</div>
+        <p class="dialogue-text" id="dialogue-text"></p>
+        <div class="dialogue-choices" id="dialogue-choices"></div>
+        <div class="dialogue-hint" id="dialogue-hint">Click to continue</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tooltip" class="hidden"></div>
+  <div id="levelup-fx" class="hidden"><div class="lu-ring"></div><div class="lu-text">LEVEL <span id="lu-level">2</span></div><div class="lu-sub">Your fragment grows stronger</div></div>
+  <div id="fade" class="hidden"></div>
+</div>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
